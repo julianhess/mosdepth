@@ -181,8 +181,11 @@ iterator regions(bam: hts.Bam, region: region_t, tid: int, targets: seq[
     if tid != -1:
       if stop == 0:
         stop = targets[tid].length
-      for r in bam.query(tid, int(region.start), int(stop)):
-        yield r
+      try:
+        for r in bam.query(tid, int(region.start), int(stop)):
+          yield r
+      except IOError:
+        quit getCurrentExceptionMsg()
     else:
       stderr.write_line("[mosdepth]", region.chrom, " not found")
 
