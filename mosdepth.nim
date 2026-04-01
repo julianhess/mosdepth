@@ -184,6 +184,9 @@ iterator regions(bam: hts.Bam, region: region_t, tid: int, targets: seq[
       try:
         for r in bam.query(tid, int(region.start), int(stop)):
           yield r
+      # if the iterator fails due to an invalid read from the BAM (due to file
+      # corruption or filesystem issues), we want to gracefully exit with a
+      # nonzero return.
       except hts.BamError:
         quit getCurrentExceptionMsg()
     else:
